@@ -20,3 +20,7 @@ def merge_dict(main_dict, new_dict, value_fn = None):
         else:
             main_dict[key] = value
     return main_dict
+
+def get_current_time():
+    import time
+    return time.strftime("%Y%m%d-%H%M%S")

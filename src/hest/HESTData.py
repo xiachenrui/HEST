@@ -98,8 +98,8 @@ class HESTData:
         else:
             self._tissue_contours = tissue_contours
         
-        if 'total_counts' not in self.adata.var_names:
-            sc.pp.calculate_qc_metrics(self.adata, inplace=True)
+        # if 'total_counts' not in self.adata.var_names:
+        #     sc.pp.calculate_qc_metrics(self.adata, inplace=True)
         
         
     def __repr__(self):
@@ -320,7 +320,10 @@ class HESTData:
         coords_center = adata.obsm['spatial']
         coords_topleft = coords_center - patch_size_src // 2
         len_tmp = len(coords_topleft)
-        in_slide_mask = (0 <= coords_topleft[:, 0] + patch_size_src) & (coords_topleft[:, 0] < self.wsi.width) & (0 <= coords_topleft[:, 1] + patch_size_src) & (coords_topleft[:, 1] < self.wsi.height)
+        in_slide_mask = (0 <= coords_topleft[:, 0] + patch_size_src) & \
+            (coords_topleft[:, 0] < self.wsi.width) & \
+            (0 <= coords_topleft[:, 1] + patch_size_src) & \
+            (coords_topleft[:, 1] < self.wsi.height)
         coords_topleft = coords_topleft[in_slide_mask]
         if len(coords_topleft) < len_tmp:
             warnings.warn(f"Filtered {len_tmp - len(coords_topleft)} spots outside the WSI")
@@ -333,6 +336,8 @@ class HESTData:
 
         if mask is not None:
             valid_barcodes = barcodes[patcher.valid_mask]
+        else:
+            valid_barcodes = barcodes
 
         patcher.to_h5(h5_path, extra_assets={'barcode': valid_barcodes})
 
