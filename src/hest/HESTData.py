@@ -101,8 +101,8 @@ class HESTData:
         else:
             self._tissue_contours = tissue_contours
         
-        if 'total_counts' not in self.adata.var_names and len(self.adata) > 0:
-            sc.pp.calculate_qc_metrics(self.adata, inplace=True)
+        # if 'total_counts' not in self.adata.var_names and len(self.adata) > 0:
+        #     sc.pp.calculate_qc_metrics(self.adata, inplace=True)
         
         
     def __repr__(self):
@@ -342,6 +342,8 @@ class HESTData:
 
         if mask is not None:
             valid_barcodes = barcodes[patcher.valid_mask]
+        else:
+            valid_barcodes = barcodes
 
         patcher.to_h5(h5_path, extra_assets={'barcode': valid_barcodes})
 

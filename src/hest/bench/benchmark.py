@@ -206,6 +206,19 @@ def embed_tiles(
         else:
             mode = 'a'
         asset_dict = {'embeddings': embeddings.cpu().numpy()}
+
+        # for key 'barcode' (str) we should keep same length (Chen-Rui)
+        pad_length = 25
+        barcodes = batch['barcodes']
+        for i, barcode in enumerate(barcodes):
+            barcode = barcode[0].decode("utf-8")
+            if len(barcode) > pad_length:
+                barcode = barcode[:pad_length]  # FIXME: this may lead to duplicate barcodes
+            else:
+                barcode = barcode.ljust(pad_length, '_')
+            barcodes[i] = str.encode(barcode)
+        batch['barcodes'] = barcodes
+
         asset_dict.update({key: np.array(val) for key, val in batch.items() if key != 'imgs'})
         save_hdf5(embedding_save_path,
                   asset_dict=asset_dict,
